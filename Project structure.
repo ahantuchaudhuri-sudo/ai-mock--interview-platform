@@ -1,0 +1,15 @@
+AI-Interview-Platform/
+│
+├── backend/
+│   ├── app.py
+│   ├── resume_parser.py
+│   ├── interviewer.py
+│   ├── scoring.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── index.html
+│   └── style.css
+│
+├── README.md
+└── demo_video.mp4   (you will record)

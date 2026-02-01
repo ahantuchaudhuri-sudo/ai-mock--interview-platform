@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Interview Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>AI-Powered Mock Interview</h1>
+
+<textarea id="resume" placeholder="Paste Resume"></textarea>
+<textarea id="jd" placeholder="Paste Job Description"></textarea>
+
+<button onclick="startInterview()">Start Interview</button>
+
+<h3 id="question"></h3>
+<textarea id="answer" placeholder="Your Answer"></textarea>
+<button onclick="submitAnswer()">Submit Answer</button>
+
+<h2 id="result"></h2>
+
+<script>
+function startInterview() {
+  fetch("http://127.0.0.1:5000/start", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      resume: document.getElementById("resume").value,
+      jd: document.getElementById("jd").value
+    })
+  }).then(res => res.json())
+    .then(data => document.getElementById("question").innerText = data.question);
+}
+
+function submitAnswer() {
+  fetch("http://127.0.0.1:5000/answer", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      answer: document.getElementById("answer").value
+    })
+  }).then(res => res.json())
+    .then(data => {
+      if(data.end){
+        document.getElementById("result").innerText = data.message;
+      }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+def calculate_score(answer):
+    length_score = min(len(answer) / 10, 10)
+    clarity = 20 if len(answer.split()) > 10 else 10
+    relevance = 20 if "because" in answer.lower() else 10
+
+    total = length_score + clarity + relevance
+    return min(total, 100)

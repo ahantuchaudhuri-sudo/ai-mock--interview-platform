@@ -1,0 +1,57 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from resume_parser import extract_resume_data
+from interviewer import get_question, adjust_difficulty
+from scoring import calculate_score
+
+app = Flask(__name__)
+CORS(app)
+
+difficulty = "Easy"
+scores = []
+
+@app.route("/start", methods=["POST"])
+def start_interview():
+    data = request.json
+    resume_text = data["resume"]
+    jd = data["jd"]
+
+    resume_data = extract_resume_data(resume_text)
+    question = get_question(difficulty, resume_data, jd)
+
+    return jsonify({"question": question, "difficulty": difficulty})
+
+@app.route("/answer", methods=["POST"])
+def submit_answer():
+    global difficulty
+    data = request.json
+    answer = data["answer"]
+
+    score = calculate_score(answer)
+    scores.append(score)
+
+    difficulty = adjust_difficulty(score)
+
+    if len(scores) >= 5 and sum(scores)/len(scores) < 40:
+        return jsonify({
+            "end": True,
+            "message": "Interview terminated due to low performance"
+        })
+
+    return jsonify({
+        "score": score,
+        "next_difficulty": difficulty
+    })
+
+@app.route("/result", methods=["GET"])
+def final_result():
+    final_score = sum(scores) / len(scores)
+    status = "Strong" if final_score > 70 else "Average" if final_score > 40 else "Needs Improvement"
+
+    return jsonify({
+        "final_score": round(final_score, 2),
+        "status": status
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)

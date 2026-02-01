@@ -1,0 +1,25 @@
+QUESTIONS = {
+    "Easy": [
+        "What is Python?",
+        "Explain REST API."
+    ],
+    "Medium": [
+        "Difference between list and tuple?",
+        "What is normalization in databases?"
+    ],
+    "Hard": [
+        "Design a scalable interview platform.",
+        "How do you optimize API performance?"
+    ]
+}
+
+def get_question(level, resume_data, jd):
+    return QUESTIONS[level][0]
+
+def adjust_difficulty(score):
+    if score > 75:
+        return "Hard"
+    elif score > 45:
+        return "Medium"
+    else:
+        return "Easy"
